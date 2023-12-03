@@ -1,0 +1,12 @@
+{
+  "name": "gscript",
+  "scripts": {
+    "delete": "del /s /q build",
+    "build": "npx tsc",
+    "start": "node ./build/main.js",
+    "dev": "npm run delete && npm run build && cls && npm run start"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}
