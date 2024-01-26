@@ -60,15 +60,18 @@ export class AST {
     private Expr(): Node {
         let left = this.Term()
         let currentToken = this.tokens[this.index]
-        if (currentToken?.tokenType == StaticTokenType.Plus) {
-            this.index += 1
-            let right = this.Expr()
-            return new Node(NodeTypes.Plus, undefined, left, right)
-        }
-        if (currentToken?.tokenType == StaticTokenType.Minus) {
-            this.index += 1
-            let right = this.Expr()
-            return new Node(NodeTypes.Minus, undefined, left, right)
+        while (currentToken?.tokenType == StaticTokenType.Plus || currentToken?.tokenType == StaticTokenType.Minus) {
+            switch (currentToken.tokenType) {
+                case StaticTokenType.Plus:
+                    this.index += 1
+                    left =  new Node(NodeTypes.Plus, undefined, left, this.Term())
+                    break
+                case StaticTokenType.Minus:
+                    this.index += 1
+                    left =  new Node(NodeTypes.Minus, undefined, left, this.Term())
+                    break
+            }
+            currentToken = this.tokens[this.index]
         }
         return left
     }
@@ -76,15 +79,18 @@ export class AST {
     private Term(): Node {
         let left = this.Literal()
         let currentToken = this.tokens[this.index]
-        if (currentToken?.tokenType == StaticTokenType.Multiply) {
-            this.index += 1
-            let right = this.Term()
-            return new Node(NodeTypes.Multiply, undefined, left, right)
-        }
-        if (currentToken?.tokenType == StaticTokenType.Divide) {
-            this.index += 1
-            let right = this.Term()
-            return new Node(NodeTypes.Divide, undefined, left, right)
+        while (currentToken?.tokenType == StaticTokenType.Multiply || currentToken?.tokenType == StaticTokenType.Divide) {
+            switch (currentToken.tokenType) {
+                case StaticTokenType.Multiply:
+                    this.index += 1
+                    left =  new Node(NodeTypes.Multiply, undefined, left, this.Literal())
+                    break
+                case StaticTokenType.Divide:
+                    this.index += 1
+                    left =  new Node(NodeTypes.Divide, undefined, left, this.Literal())
+                    break
+            }
+            currentToken = this.tokens[this.index]
         }
         return left
     }
