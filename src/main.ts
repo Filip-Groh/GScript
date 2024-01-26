@@ -1,7 +1,8 @@
 // import prompt from 'prompt-sync';
 import { readFileSync } from 'fs';
 import { tokenize } from './lexer';
-import { readTokens } from './token';
+// import { readTokens } from './token';
+import { AST } from './parser';
 
 // function readFile() {
 //     const filePath = prompt()("Input filepath: ");
@@ -16,4 +17,5 @@ function readDefault() {
 
 const input = readDefault();
 const tokens = tokenize(input);
-console.log(readTokens(tokens));
+const ast = new AST(tokens).parse()
+console.log(ast.toString())
