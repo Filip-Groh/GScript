@@ -7,6 +7,11 @@
     "dev": "npm run delete && npm run build && cls && npm run start"
   },
   "devDependencies": {
+    "@types/node": "^20.10.2",
+    "@types/prompt-sync": "^4.2.3",
     "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
   }
 }
