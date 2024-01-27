@@ -4,7 +4,8 @@
     "delete": "del /s /q build",
     "build": "npx tsc",
     "start": "node ./build/main.js",
-    "dev": "npm run delete && npm run build && cls && npm run start"
+    "dev": "npm run build && cls && npm run start",
+    "test": "npm run build && cls && node ./build/test.js"
   },
   "devDependencies": {
     "@types/node": "^20.10.2",

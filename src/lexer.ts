@@ -32,9 +32,9 @@ export function tokenize(input: string): Token[] {
         if (binding != undefined) {
             result.push(new Token(binding))
         }
-        if (Number(currentChar)) {
+        if ("123456789".includes(currentChar)) {
             let currentNumber = ""
-            while (Number(currentChar)) {
+            while (currentChar && "0123456789".includes(currentChar)) {
                 currentNumber += currentChar
                 index += 1
                 currentChar = chars[index]
