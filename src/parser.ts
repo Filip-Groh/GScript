@@ -1,4 +1,4 @@
-import { Token, StaticTokenType, DynamicTokenType } from "./token";
+import { Token, StaticTokenType, DynamicTokenType, Keywords } from "./token";
 
 export enum NodeTypes {
     Plus = "+",
@@ -7,6 +7,9 @@ export enum NodeTypes {
     Divide = "/",
     Power = "**",
     Number = "(NUMBER)",
+    Declaration = "(DECLARATION)",
+    Inicialization = "(INICIALIZATION)",
+    Access = "(ACCESS)",
     Empty = "(empty)"
 }
 
@@ -41,6 +44,12 @@ export class Node {
                 return "(" + this.left?.toString() + " ** " + this.right?.toString() + ")"
             case NodeTypes.Number:
                 return this.value
+            case NodeTypes.Declaration:
+                return "(" + "let" + " " + this.value + ")"
+            case NodeTypes.Inicialization:
+                return "(" + this.left?.toString() + " = " + this.right?.toString() + ")"
+            case NodeTypes.Access:
+                return "(" + this.value + ")"
             case NodeTypes.Empty:
                 return ""
         }
@@ -61,6 +70,22 @@ export class AST {
     }
 
     private Expr(): Node {
+        let currentToken = this.tokens[this.index]
+        if (currentToken?.tokenType == DynamicTokenType.Keyword && currentToken.value == Keywords.Let) {
+            this.index += 1
+            currentToken = this.tokens[this.index]
+            if (currentToken?.tokenType == DynamicTokenType.Identifier) {
+                let identifier = currentToken.value
+                let declaration = new Node(NodeTypes.Declaration, identifier)
+                this.index += 1
+                let expression = this.ArithExpr()
+                return new Node(NodeTypes.Inicialization, identifier, declaration, expression)
+            }
+        }
+        return this.ArithExpr()
+    }
+
+    private ArithExpr(): Node {
         let left = this.Term()
         let currentToken = this.tokens[this.index]
         while (currentToken?.tokenType == StaticTokenType.Plus || currentToken?.tokenType == StaticTokenType.Minus) {
@@ -121,12 +146,16 @@ export class AST {
         }
         if (currentToken?.tokenType == StaticTokenType.LParen) {
             this.index += 1
-            let expr = this.Expr()
+            let expr = this.ArithExpr()
             currentToken = this.tokens[this.index]
             if (currentToken?.tokenType == StaticTokenType.RParen) {
                 this.index += 1
                 return expr
             }
+        }
+        if (currentToken?.tokenType == DynamicTokenType.Identifier) {
+            this.index += 1
+            return new Node(NodeTypes.Access, currentToken.value)
         }
         return new Node(NodeTypes.Empty)
     }

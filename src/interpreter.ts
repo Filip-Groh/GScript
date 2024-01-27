@@ -1,5 +1,23 @@
 import { Node, NodeTypes } from "./parser";
 
+enum VariableStates {
+    Declared = "Declared",
+    Assigned = "Assigned"
+}
+
+class Variable {
+    public variableState: VariableStates
+    public value?: number
+    public constructor(variableState: VariableStates, value?: number) {
+        this.variableState = variableState
+        if (value) {
+            this.value = value
+        }
+    }
+}
+
+let heap = new Map<string, Variable>()
+
 export function interpret(ast: Node): number {
     switch (ast.type) {
         case NodeTypes.Plus:
@@ -37,6 +55,21 @@ export function interpret(ast: Node): number {
                 return left ** right
             }
             return 0
+        case NodeTypes.Declaration:
+            heap.set(ast.value, new Variable(VariableStates.Declared))
+            return 0
+        case NodeTypes.Inicialization:
+            if (ast.left && ast.right) {
+                interpret(ast.left)
+                let variable = heap.get(ast.value)
+                if (variable) {
+                    variable.variableState = VariableStates.Assigned
+                    variable.value = interpret(ast.right)
+                }
+            }
+            return 0
+        case NodeTypes.Access:
+            return heap.get(ast.value)?.value || 0
         case NodeTypes.Number:
             return Number(ast.value)
         case NodeTypes.Empty:

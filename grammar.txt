@@ -1,9 +1,17 @@
-Expr -> (Term + Term)*
-        (Term - Term)*
-        Term
-Term -> (Factor * Factor)*
-        (Factor / Factor)*
-        Factor
-Factor -> (Literal ** Literal)*
-          Literal
-Literal -> Number | (<Expr>)
+Expr -> |let| Identifier <Arith-expr>
+        <Arith-expr>
+
+Arith-expr -> (<Term> + <Term>)*
+              (<Term> - <Term>)*
+              <Term>
+
+Term -> (<Factor> * <Factor>)*
+        (<Factor> / <Factor>)*
+        <Factor>
+
+Factor -> (<Literal> ** <Literal>)*
+          <Literal>
+
+Literal -> Number 
+           Identifier
+           (<Arith-expr>)

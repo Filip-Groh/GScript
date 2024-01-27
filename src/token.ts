@@ -10,7 +10,13 @@ export enum StaticTokenType {
 }
 
 export enum DynamicTokenType {
-    Number = "(NUMBER)"
+    Number = "(NUMBER)",
+    Keyword = "(KEYWORD)",
+    Identifier = "(IDENTIFIER)"
+}
+
+export enum Keywords {
+    Let = "let"
 }
 
 export class Token {
@@ -26,6 +32,10 @@ export class Token {
         switch (this.tokenType) {
             case DynamicTokenType.Number:
                 return this.value
+            case DynamicTokenType.Keyword:
+                return "KEYWORD:" + this.value
+            case DynamicTokenType.Identifier:
+                return "IDENTIFIER:" + this.value
             case StaticTokenType.Plus:
                 return "+"
             case StaticTokenType.Minus:
@@ -50,6 +60,7 @@ export class Token {
 
 export function readTokens(tokens: Token[]): string[] {
     const result: string[] = []
+    tokens = JSON.parse(JSON.stringify(tokens));
     while (tokens.length > 0) {
         const token = tokens.shift()
         if (token) {
