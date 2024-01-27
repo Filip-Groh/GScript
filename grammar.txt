@@ -1,7 +1,9 @@
 Expr -> (Term + Term)*
         (Term - Term)*
         Term
-Term -> (Literal * Literal)*
-        (Literal / Literal)*
-        Literal
+Term -> (Factor * Factor)*
+        (Factor / Factor)*
+        Factor
+Factor -> (Literal ** Literal)*
+          Literal
 Literal -> Number | (<Expr>)

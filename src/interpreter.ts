@@ -30,6 +30,13 @@ export function interpret(ast: Node): number {
                 return left / right
             }
             return 0
+        case NodeTypes.Power:
+            if (ast.left && ast.right) {
+                let left = interpret(ast.left)
+                let right = interpret(ast.right)
+                return left ** right
+            }
+            return 0
         case NodeTypes.Number:
             return Number(ast.value)
         case NodeTypes.Empty:

@@ -3,6 +3,7 @@ export enum StaticTokenType {
     Minus = "-",
     Multiply = "*",
     Divide = "/",
+    Power = "**",
     LParen = "(",
     RParen = ")",
     EOF = "/EOF",
@@ -33,6 +34,8 @@ export class Token {
                 return "*"
             case StaticTokenType.Divide:
                 return "/"
+            case StaticTokenType.Power:
+                return "**"
             case StaticTokenType.LParen:
                 return "("
             case StaticTokenType.RParen:

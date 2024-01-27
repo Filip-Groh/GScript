@@ -5,6 +5,7 @@ export enum NodeTypes {
     Minus = "-",
     Multiply = "*",
     Divide = "/",
+    Power = "**",
     Number = "(NUMBER)",
     Empty = "(empty)"
 }
@@ -36,6 +37,8 @@ export class Node {
                 return "(" + this.left?.toString() + " * " + this.right?.toString() + ")"
             case NodeTypes.Divide:
                 return "(" + this.left?.toString() + " / " + this.right?.toString() + ")"
+            case NodeTypes.Power:
+                return "(" + this.left?.toString() + " ** " + this.right?.toString() + ")"
             case NodeTypes.Number:
                 return this.value
             case NodeTypes.Empty:
@@ -77,17 +80,32 @@ export class AST {
     }
 
     private Term(): Node {
-        let left = this.Literal()
+        let left = this.Factor()
         let currentToken = this.tokens[this.index]
         while (currentToken?.tokenType == StaticTokenType.Multiply || currentToken?.tokenType == StaticTokenType.Divide) {
             switch (currentToken.tokenType) {
                 case StaticTokenType.Multiply:
                     this.index += 1
-                    left =  new Node(NodeTypes.Multiply, undefined, left, this.Literal())
+                    left =  new Node(NodeTypes.Multiply, undefined, left, this.Factor())
                     break
                 case StaticTokenType.Divide:
                     this.index += 1
-                    left =  new Node(NodeTypes.Divide, undefined, left, this.Literal())
+                    left =  new Node(NodeTypes.Divide, undefined, left, this.Factor())
+                    break
+            }
+            currentToken = this.tokens[this.index]
+        }
+        return left
+    }
+
+    private Factor(): Node {
+        let left = this.Literal()
+        let currentToken = this.tokens[this.index]
+        while (currentToken?.tokenType == StaticTokenType.Power) {
+            switch (currentToken.tokenType) {
+                case StaticTokenType.Power:
+                    this.index += 1
+                    left =  new Node(NodeTypes.Power, undefined, left, this.Literal())
                     break
             }
             currentToken = this.tokens[this.index]

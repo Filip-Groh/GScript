@@ -7,7 +7,8 @@ function randomOperator(): string {
         "+",
         "-",
         "*",
-        "/"
+        "/",
+        "**"
     ]
     return operators[Math.round(Math.random() * (operators.length - 1))] || ""
 }
@@ -16,14 +17,18 @@ function randInt(range: number): string {
     return (Math.round(Math.random() * range)).toString()
 }
 
-function generateRandomExpression(): string {
-    return randInt(1000000) + randomOperator() + randInt(1000000)
+function generateRandomExpression(numOfOperators: number): string {
+    let result = randInt(100)
+    for (let i = 0; i < numOfOperators; i++) {
+        result += randomOperator() + randInt(1000000)
+    }
+    return result
 }
 
 function generateRandomExpressions(length: number): string[] {
     let result: string[] = []
     for (let i = 0; i < length; i++) {
-        result.push(generateRandomExpression())
+        result.push(generateRandomExpression(2))
     }
     return result
 }

@@ -30,7 +30,18 @@ export function tokenize(input: string): Token[] {
         }
         let binding = tokenBinding[currentChar]
         if (binding != undefined) {
-            result.push(new Token(binding))
+            if (binding == StaticTokenType.Multiply) {
+                index += 1
+                currentChar = chars[index]
+                if (currentChar && tokenBinding[currentChar] == StaticTokenType.Multiply) {
+                    result.push(new Token(StaticTokenType.Power))
+                } else {
+                    result.push(new Token(StaticTokenType.Multiply))
+                    continue
+                }
+            } else {
+                result.push(new Token(binding))
+            }
         }
         if ("123456789".includes(currentChar)) {
             let currentNumber = ""
